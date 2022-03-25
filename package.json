@@ -1,0 +1,21 @@
+{
+    "name": "com.leopotam.ecslite.di",
+    "author": "Leopotam",
+    "displayName": "LeoECS Lite DI",
+    "description": "LeoECS Lite DI - Поддержка автоматической инъекции данных в поля ECS-систем.",
+    "unity": "2020.3",
+    "version": "2022.3.22",
+    "keywords": [
+        "leoecslite",
+        "leoecs",
+        "ecs",
+        "dependency injection",
+        "di",
+        "performance"
+    ],
+    "dependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Leopotam/ecslite-di.git"
+    }
+}
