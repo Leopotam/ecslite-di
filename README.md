@@ -59,7 +59,7 @@ class TestSystem : IEcsRunSystem {
     // Поле будет содержать ссылку на мир "events".
     readonly EcsWorldInject _eventsWorld = "events";
 
-    public void Run (EcsSystems systems) {
+    public void Run (IEcsSystems systems) {
         // Все поля заполнены и могут быть использованы:
         // _defaultWorld.Value.xxx
         // _eventsWorld.Value.xxx
@@ -76,7 +76,7 @@ class TestSystem : IEcsRunSystem {
     // Поле будет содержать ссылку на пул из мира "events".
     readonly EcsPoolInject<C1> _c1EventsPool = "events";
 
-    public void Run (EcsSystems systems) {
+    public void Run (IEcsSystems systems) {
         // Все поля заполнены и могут быть использованы:
         // _c1Pool.Value.xxx
         // _c1EventsPool.Value.xxx
@@ -99,7 +99,7 @@ class TestSystem : IEcsRunSystem {
     // Поле будет содержать ссылку на фильтр (с C1, но без C2) из мира "events".
     readonly EcsFilter<Inc<C1>, Exc<C2>> _eventsFilter11 = "events";
 
-    public void Run (EcsSystems systems) {
+    public void Run (IEcsSystems systems) {
         // Все поля заполнены и могут быть использованы:
         // _filter1.Value.xxx
         // _filter2.Value.xxx
@@ -188,7 +188,7 @@ class TestSystem : IEcsRunSystem {
     // Поле будет содержать ссылку на GetShared() объект.
     readonly EcsSharedInject<Shared> _shared = default;
 
-    public void Run (EcsSystems systems) {
+    public void Run (IEcsSystems systems) {
         // Все поля заполнены и могут быть использованы:
         // _shared.Value.xxx
     }
@@ -209,7 +209,7 @@ class TestSystem : IEcsRunSystem {
     // Поле будет содержать ссылку на объект совместимого типа, переданого в вызов EcsSystems.Inject(xxx).
     readonly EcsCustomInject<CustomData2> _custom2 = default;
 
-    public void Run (EcsSystems systems) {
+    public void Run (IEcsSystems systems) {
         // Все поля заполнены и могут быть использованы:
         // _custom1.Value.xxx
         // _custom2.Value.xxx
