@@ -7,28 +7,39 @@ using System;
 using System.Reflection;
 
 namespace Leopotam.EcsLite.Di {
+#if LEOECSLITE_DI
+    public interface IEcsInjectSystem : IEcsSystem {
+        void Inject (IEcsSystems systems, params object[] injects);
+    }
+#endif
     public static class Extensions {
-        public static EcsSystems Inject (this EcsSystems systems, params object[] injects) {
+        public static IEcsSystems Inject (this IEcsSystems systems, params object[] injects) {
             if (injects == null) { injects = Array.Empty<object> (); }
-            IEcsSystem[] allSystems = null;
-            var systemsCount = systems.GetAllSystems (ref allSystems);
-
-            for (var i = 0; i < systemsCount; i++) {
-                var system = allSystems[i];
-                foreach (var f in system.GetType ().GetFields (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
-                    // skip statics.
-                    if (f.IsStatic) { continue; }
-                    // EcsWorldInject, EcsFilterInject, EcsPoolInject, EcsSharedInject.
-                    if (InjectBuiltIns (f, system, systems)) { continue; }
-                    // EcsDataInject.
-                    if (InjectCustoms (f, system, injects)) { continue; }
+            foreach (var system in systems.GetAllSystems ()) {
+#if LEOECSLITE_DI
+                if (system is IEcsInjectSystem injectSystem) {
+                    injectSystem.Inject (systems, injects);
+                    continue;
                 }
+#endif
+                InjectToSystem (system, systems, injects);
             }
 
             return systems;
         }
 
-        static bool InjectBuiltIns (FieldInfo fieldInfo, IEcsSystem system, EcsSystems systems) {
+        public static void InjectToSystem (IEcsSystem system, IEcsSystems systems, object[] injects) {
+            foreach (var f in system.GetType ().GetFields (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
+                // skip statics.
+                if (f.IsStatic) { continue; }
+                // EcsWorldInject, EcsFilterInject, EcsPoolInject, EcsSharedInject.
+                if (InjectBuiltIns (f, system, systems)) { continue; }
+                // EcsDataInject.
+                if (InjectCustoms (f, system, injects)) { }
+            }
+        }
+
+        static bool InjectBuiltIns (FieldInfo fieldInfo, IEcsSystem system, IEcsSystems systems) {
             if (typeof (IEcsDataInject).IsAssignableFrom (fieldInfo.FieldType)) {
                 var instance = (IEcsDataInject) fieldInfo.GetValue (system);
                 instance.Fill (systems);
@@ -50,7 +61,7 @@ namespace Leopotam.EcsLite.Di {
     }
 
     public interface IEcsDataInject {
-        void Fill (EcsSystems systems);
+        void Fill (IEcsSystems systems);
     }
 
     public interface IEcsCustomDataInject {
@@ -75,7 +86,7 @@ namespace Leopotam.EcsLite.Di {
             return new EcsFilterInject<TInc> { _worldName = worldName };
         }
 
-        void IEcsDataInject.Fill (EcsSystems systems) {
+        void IEcsDataInject.Fill (IEcsSystems systems) {
             Pools = default;
             Value = Pools.Fill (systems.GetWorld (_worldName)).End ();
         }
@@ -92,7 +103,7 @@ namespace Leopotam.EcsLite.Di {
             return new EcsFilterInject<TInc, TExc> { _worldName = worldName };
         }
 
-        void IEcsDataInject.Fill (EcsSystems systems) {
+        void IEcsDataInject.Fill (IEcsSystems systems) {
             Pools = default;
             TExc exc = default;
             Value = exc.Fill (Pools.Fill (systems.GetWorld (_worldName))).End ();
@@ -107,7 +118,7 @@ namespace Leopotam.EcsLite.Di {
             return new EcsPoolInject<T> { _worldName = worldName };
         }
 
-        void IEcsDataInject.Fill (EcsSystems systems) {
+        void IEcsDataInject.Fill (IEcsSystems systems) {
             Value = systems.GetWorld (_worldName).GetPool<T> ();
         }
     }
@@ -115,7 +126,7 @@ namespace Leopotam.EcsLite.Di {
     public struct EcsSharedInject<T> : IEcsDataInject where T : class {
         public T Value;
 
-        void IEcsDataInject.Fill (EcsSystems systems) {
+        void IEcsDataInject.Fill (IEcsSystems systems) {
             Value = systems.GetShared<T> ();
         }
     }
@@ -144,7 +155,7 @@ namespace Leopotam.EcsLite.Di {
             return new EcsWorldInject { _worldName = worldName };
         }
 
-        void IEcsDataInject.Fill (EcsSystems systems) {
+        void IEcsDataInject.Fill (IEcsSystems systems) {
             Value = systems.GetWorld (_worldName);
         }
     }
