@@ -80,6 +80,9 @@ class TestSystem : IEcsRunSystem {
         // Все поля заполнены и могут быть использованы:
         // _c1Pool.Value.xxx
         // _c1EventsPool.Value.xxx
+        // Для быстрого создания сущностей с одним компонентом (событий)
+        // можно использовать следующий метод:
+        // ref var c1 = ref c1Pool.NewEntity();
     }
 }
 ```

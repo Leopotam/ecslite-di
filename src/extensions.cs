@@ -58,6 +58,10 @@ namespace Leopotam.EcsLite.Di {
             }
             return false;
         }
+
+        public static ref T NewEntity<T> (this in EcsPoolInject<T> poolInject) where T : struct {
+            return ref poolInject.Value.Add (poolInject.Value.GetWorld ().NewEntity ());
+        }
     }
 
     public interface IEcsDataInject {
