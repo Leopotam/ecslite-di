@@ -4,7 +4,7 @@
     "displayName": "LeoECS Lite DI",
     "description": "LeoECS Lite DI - Поддержка автоматической инъекции данных в поля ECS-систем.",
     "unity": "2020.3",
-    "version": "2022.8.22-preview",
+    "version": "2022.8.22",
     "keywords": [
         "leoecslite",
         "leoecs",
