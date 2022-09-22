@@ -97,10 +97,10 @@ class TestSystem : IEcsRunSystem {
     readonly EcsFilterInject<Inc<C1, C2>> _filter2 = default;
     
     // Поле будет содержать ссылку на фильтр (с C1, но без C2) из мира "по умолчанию".
-    readonly EcsFilter<Inc<C1>, Exc<C2>> _filter11 = default;
+    readonly EcsFilterInject<Inc<C1>, Exc<C2>> _filter11 = default;
     
     // Поле будет содержать ссылку на фильтр (с C1, но без C2) из мира "events".
-    readonly EcsFilter<Inc<C1>, Exc<C2>> _eventsFilter11 = "events";
+    readonly EcsFilterInject<Inc<C1>, Exc<C2>> _eventsFilter11 = "events";
 
     public void Run (IEcsSystems systems) {
         // Все поля заполнены и могут быть использованы:
