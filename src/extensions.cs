@@ -34,7 +34,7 @@ namespace Leopotam.EcsLite.Di {
                 if (f.IsStatic) { continue; }
                 // EcsWorldInject, EcsFilterInject, EcsPoolInject, EcsSharedInject.
                 if (InjectBuiltIns (f, system, systems)) { continue; }
-                // EcsDataInject.
+                // EcsCustomInject.
                 if (InjectCustoms (f, system, injects)) { }
             }
         }
